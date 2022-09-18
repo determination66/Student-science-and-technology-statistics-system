@@ -15,7 +15,7 @@ class To_examine : public QDialog
 public:
     explicit To_examine(QWidget *parent = 0);
     ~To_examine();
-    void open_txt(QString);//具体每行数据显示
+    void open_txt(QString d);//具体每行数据显示
     void qing();//清空列表
 
 

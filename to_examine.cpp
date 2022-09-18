@@ -11,8 +11,8 @@
 #include "QStringList"
 #include "QFile"
 #include "QPropertyAnimation"
-#include<QDebug>
-
+#include<qdebug.h>
+#include<QMessageBox>
 
 To_examine::To_examine(QWidget *parent) :
     QDialog(parent),
@@ -34,6 +34,7 @@ To_examine::To_examine(QWidget *parent) :
     QPalette palette2=this->palette();
     palette2.setBrush(QPalette::WindowText,Qt::white);
     this->setPalette(palette2);
+
 
     ui->tableWidget->setSelectionBehavior(QAbstractItemView::SelectRows);//整行选中
     connect(ui->tableWidget->horizontalHeader(),SIGNAL(sectionClicked(int)),this,SLOT(sort(int)));
@@ -78,41 +79,52 @@ void To_examine::qing()
 //具体每行数据显示
 void To_examine::open_txt(QString d)
 {
-    qDebug()<<"open_txt被运行,对应的文件路径为："+d;
+//    QFile f("D:\\qtproject\\untitled1\\infotxt\\未审核内容\\未审核技能证书.txt");
     QFile f(d);
-    f.open(QIODevice::ReadOnly | QIODevice::Text);
+//     if(d=="D:\\qtproject\\untitled1\\infotxt\\未审核内容\\未审核科研训练.txt")
+//     {
+//         QMessageBox::information(this,"tips","the same!");
+//     }
+//     else
+//     {
+//      QMessageBox::information(this,"tips","not the same!");
+//     }
+     if(!f.open(QIODevice::ReadOnly))
+     {
+         qDebug()<<"无法打开文件";
+     };
+//   qDebug()<<d;
+//   qDebug()<<"D:\\qtproject\\untitled1\\infotxt\\未审核内容\\未审核技能证书.txt";
+
     while(!f.atEnd())
     {
         //将数据提取出来
         QByteArray line=f.readLine();
-        QString s(line);
-        if(s=="\n")continue;
+        QString s(line);if(s=="\n")continue;
         QStringList list = s.split(" ");
         int row=ui->tableWidget->rowCount();
-        //QMessageBox::information(this,"test","test");
         ui->tableWidget->insertRow(row);
         QTableWidgetItem *item;
+        qDebug()<<list.count();
         for(int i=0;i<list.count();i++)
         {
-            qDebug()<<i;
+
             item=new QTableWidgetItem(list.at(i));
-            qDebug()<<"在for中："<<list.at(i);
             QFont font;
             font.setBold(true);//设置为粗体
             font.setPointSize(11);//字体大小
             item->setFont(font);
             item->setTextAlignment(Qt::AlignHCenter);
+            qDebug()<<row<<" "<<i<<" "<<list.at(i);
             ui->tableWidget->setItem(row,i,item);
         }
         item=new QTableWidgetItem;
         item->setCheckState(Qt::Unchecked);
         ui->tableWidget->setItem(row,ui->tableWidget->columnCount()-1,item);
-        //qDebug()<<"当前row:"<<row<<" 2参数"<<ui->tableWidget->columnCount()-1;
     }
     f.close();
-    qDebug()<<"on_text被执行完毕！";
-}
 
+}
 
 //提交 审核过数据
 void To_examine::on_pushButton_14_clicked()
@@ -126,30 +138,30 @@ void To_examine::on_pushButton_14_clicked()
         QString one_text=ui->tableWidget->item(0,0)->text(),d1,d2;
         if(one_text=="国家级省级科技成果奖"||one_text=="论文"||one_text=="在报刊、杂志上发表作品"||one_text=="其它")
         {
-            d2="D:\\qtproject\\untitled1\\infotxt\\未经审核内容\\科研成果.txt";
-            d1="D:\\qtproject\\untitled1\\infotxt\\未经审核内容\\未审核科研成果.txt";
+            d2="D:\\qtproject\\untitled1\\infotxt\\已审核内容\\科研成果.txt";
+            d1="D:\\qtproject\\untitled1\\infotxt\\未审核内容\\未审核科研成果.txt";
         }
         else if(one_text.contains("科研训练"))
         {
-            d2="D:\\qtproject\\untitled1\\infotxt\\未经审核内容\\科研训练.txt";
-            d1="D:\\qtproject\\untitled1\\infotxt\\未经审核内容\\未审核科研训练.txt";
+            d2="D:\\qtproject\\untitled1\\infotxt\\已审核内容\\科研训练.txt";
+            d1="D:\\qtproject\\untitled1\\infotxt\\未审核内容\\未审核科研训练.txt";
 
         }else if(one_text.contains("获得专利")||one_text.contains("软件著作权")||one_text.contains("其他"))
         {
-            d2="D:\\qtproject\\untitled1\\infotxt\\未经审核内容\\知识产权.txt";
-            d1="D:\\qtproject\\untitled1\\infotxt\\未经审核内容\\未审核知识产权.txt";
+            d2="D:\\qtproject\\untitled1\\infotxt\\已审核内容\\知识产权.txt";
+            d1="D:\\qtproject\\untitled1\\infotxt\\未审核内容\\未审核知识产权.txt";
         }else if(one_text.contains("学科与科技竞赛"))
         {
-            d2="D:\\qtproject\\untitled1\\infotxt\\未经审核内容\\学科与科技竞赛.txt";
-            d1="D:\\qtproject\\untitled1\\infotxt\\未经审核内容\\未审核学科与科技竞赛.txt";
+            d2="D:\\qtproject\\untitled1\\infotxt\\已审核内容\\学科与科技竞赛.txt";
+            d1="D:\\qtproject\\untitled1\\infotxt\\未审核内容\\未审核学科与科技竞赛.txt";
         }else if(one_text.contains("技能证书"))
         {
-            d2="D:\\qtproject\\untitled1\\infotxt\\未经审核内容\\技能证书.txt";
-            d1="D:\\qtproject\\untitled1\\infotxt\\未经审核内容\\未审核技能证书.txt";
+            d2="D:\\qtproject\\untitled1\\infotxt\\已审核内容\\技能证书.txt";
+            d1="D:\\qtproject\\untitled1\\infotxt\\未审核内容\\未审核技能证书.txt";
         }else if(one_text.contains("创业实践和创新创业教育"))
         {
-            d2="D:\\qtproject\\untitled1\\infotxt\\未经审核内容\\创业实践和创新创业教育.txt";
-            d1="D:\\qtproject\\untitled1\\infotxt\\未经审核内容\\未审核创业实践和创新创业教育.txt";
+            d2="D:\\qtproject\\untitled1\\infotxt\\已审核内容\\创业实践和创新创业教育.txt";
+            d1="D:\\qtproject\\untitled1\\infotxt\\未审核内容\\未审核创业实践和创新创业教育.txt";
         }
         QFile f1(d1);
         f1.open(QIODevice::ReadOnly | QIODevice::Text);
@@ -166,6 +178,7 @@ void To_examine::on_pushButton_14_clicked()
                 f2.write(s.toUtf8());
             }
         }
+
         f1.close();
         f2.close();
         //清空未审核txt文件
@@ -173,7 +186,6 @@ void To_examine::on_pushButton_14_clicked()
         shan.open(QIODevice::WriteOnly|QIODevice::Truncate);
         shan.close();
         ui->label_3->setText("保存成功");
-
     }
 
     //清空列表
@@ -182,11 +194,12 @@ void To_examine::on_pushButton_14_clicked()
     ui->tableWidget->setRowCount(0);
 }
 
-//科研成果数据抬头显示
+//科研成果数据显示
 void To_examine::on_pushButton_11_clicked()
 {
     //清空目前table
     qing();
+
     QTableWidgetItem *item;
     //设置表头
     QStringList str;
@@ -203,7 +216,7 @@ void To_examine::on_pushButton_11_clicked()
         item->setFont(font);
         ui->tableWidget->setHorizontalHeaderItem(i,item);
     }
-    QString d="D:\\qtproject\\untitled1\\infotxt\\未经审核内容\\未审核科研成果.txt";
+    QString d="D:\\qtproject\\untitled1\\infotxt\\未审核内容\\未审核科研成果.txt";
     open_txt(d);
 }
 
@@ -228,7 +241,7 @@ void To_examine::on_pushButton_8_clicked()
         item->setFont(font);
         ui->tableWidget->setHorizontalHeaderItem(i,item);
     }
-    QString d="D:\\qtproject\\untitled1\\infotxt\\未经审核内容\\未审核科研训练.txt";
+    QString d="D:\\qtproject\\untitled1\\infotxt\\未审核内容\\未审核科研训练.txt";
     open_txt(d);
 }
 
@@ -253,14 +266,13 @@ void To_examine::on_pushButton_12_clicked()
         item->setFont(font);
         ui->tableWidget->setHorizontalHeaderItem(i,item);
     }
-    QString d="D:\\qtproject\\untitled1\\infotxt\\未经审核内容\\未审核技能证书.txt";
+    QString d="D:\\qtproject\\untitled1\\infotxt\\未审核内容\\未审核技能证书.txt";
     open_txt(d);
 }
 
 //知识产权
 void To_examine::on_pushButton_7_clicked()
 {
-    qDebug()<<"点击率知识产权btn";
     //清空目前table
     qing();
     QTableWidgetItem *item;
@@ -279,7 +291,7 @@ void To_examine::on_pushButton_7_clicked()
         item->setFont(font);
         ui->tableWidget->setHorizontalHeaderItem(i,item);
     }
-    QString d="D:\\qtproject\\untitled1\\infotxt\\未经审核内容\\未审核知识产权.txt";
+    QString d="D:\\qtproject\\untitled1\\infotxt\\未审核内容\\未审核知识产权.txt";
     open_txt(d);
 }
 
@@ -304,7 +316,7 @@ void To_examine::on_pushButton_9_clicked()
         item->setFont(font);
         ui->tableWidget->setHorizontalHeaderItem(i,item);
     }
-    QString d="D:\\qtproject\\untitled1\\infotxt\\未经审核内容\\未审核学科与科技竞赛.txt";
+    QString d="D:\\qtproject\\untitled1\\infotxt\\未审核内容\\未审核学科与科技竞赛.txt";
     open_txt(d);
 }
 
@@ -329,7 +341,7 @@ void To_examine::on_pushButton_13_clicked()
         item->setFont(font);
         ui->tableWidget->setHorizontalHeaderItem(i,item);
     }
-    QString d="D:\\qtproject\\untitled1\\infotxt\\未经审核内容\\未审核创业实践和创新创业教育.txt";
+    QString d="D:\\qtproject\\untitled1\\infotxt\\未审核内容\\未审核创业实践和创新创业教育.txt";
     open_txt(d);
 }
 

@@ -44,17 +44,15 @@ Love::~Love()
 //提交错误学号报错 保存学号
 void Love::on_pushButton_clicked()
 {
-    QString number=ui->textEdit->toPlainText();
-    QFile f("E:\\Qt\\hello\\datastructure\\大学生课外科技活动成果\\报错.txt");
+    QString errinfo=ui->textEdit->toPlainText();
+    QFile f("D:\\qtproject\\untitled1\\infotxt\\错误信息\\错误.txt");
     f.open(QIODevice::Append | QIODevice::Text);
-    f.write(number.toUtf8()+'\n');
+    f.write(errinfo.toUtf8()+'\n');
     f.close();
     this->close();
 }
 
 //关闭界面
-
-
 void Love::on_pushButton_2_clicked()
 {
     this->close();

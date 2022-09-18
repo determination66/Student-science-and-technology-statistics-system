@@ -64,22 +64,20 @@ void Look::on_pushButton_clicked()
 }
 
 //查询txt文件
-
 void Look::search_txt(QString d)
 {
     //读入文件中科研成果显示到table中.
-    //d=
     QFile f(d);
     f.open(QIODevice::ReadOnly | QIODevice::Text);
     while(!f.atEnd())
     {
         //将数据提取出来
         QByteArray line=f.readLine();
-        QString s(line);if(s=="\n")continue;
+        QString s(line);
+        if(s=="\n")continue;
         QStringList list = s.split(" ");
-
-
         int row=ui->tableWidget->rowCount();
+
 
         ui->tableWidget->insertRow(row);
         QTableWidgetItem *item;
@@ -125,7 +123,7 @@ void Look::on_pushButton_10_clicked()
 
         ui->tableWidget->setHorizontalHeaderItem(i,item);
     }
-    QString d="D:\\qtproject\\untitled1\\infotxt\\已经审核内容\\科研成果.txt";
+    QString d="D:\\qtproject\\untitled1\\infotxt\\已审核内容\\科研成果.txt";
     search_txt(d);
 }
 
@@ -153,7 +151,7 @@ void Look::on_pushButton_3_clicked()
         item->setFont(font);
         ui->tableWidget->setHorizontalHeaderItem(i,item);
     }
-    QString d("D:\\qtproject\\untitled1\\infotxt\\已经审核内容\\科研训练.txt");
+    QString d("D:\\qtproject\\untitled1\\infotxt\\已审核内容\\科研训练.txt");
     search_txt(d);
 
 }
@@ -182,7 +180,7 @@ void Look::on_pushButton_5_clicked()
         item->setFont(font);
         ui->tableWidget->setHorizontalHeaderItem(i,item);
     }
-    QString d("D:\\qtproject\\untitled1\\infotxt\\已经审核内容\\技能证书.txt");
+    QString d("D:\\qtproject\\untitled1\\infotxt\\已审核内容\\技能证书.txt");
     search_txt(d);
 
 }
@@ -211,7 +209,7 @@ void Look::on_pushButton_2_clicked()
         item->setFont(font);
         ui->tableWidget->setHorizontalHeaderItem(i,item);
     }
-    QString d("D:\\qtproject\\untitled1\\infotxt\\已经审核内容\\知识产权.txt");
+    QString d("D:\\qtproject\\untitled1\\infotxt\\已审核内容\\知识产权.txt");
     search_txt(d);
 }
 
@@ -239,7 +237,7 @@ void Look::on_pushButton_4_clicked()
         item->setFont(font);
         ui->tableWidget->setHorizontalHeaderItem(i,item);
     }
-    QString d("D:\\qtproject\\untitled1\\infotxt\\已经审核内容\\学科与科技竞赛.txt");
+    QString d("D:\\qtproject\\untitled1\\infotxt\\已审核内容\\学科与科技竞赛.txt");
     search_txt(d);
 }
 
@@ -268,6 +266,6 @@ void Look::on_pushButton_6_clicked()
         item->setFont(font);
         ui->tableWidget->setHorizontalHeaderItem(i,item);
     }
-    QString d("D:\\qtproject\\untitled1\\infotxt\\已经审核内容\\创业实践和创新创业教育.txt");
+    QString d("D:\\qtproject\\untitled1\\infotxt\\已审核内容\\创业实践和创新创业教育.txt");
     search_txt(d);
 }
