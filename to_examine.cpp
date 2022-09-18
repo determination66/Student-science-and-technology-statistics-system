@@ -146,19 +146,23 @@ void To_examine::on_pushButton_14_clicked()
             d2="D:\\qtproject\\untitled1\\infotxt\\已审核内容\\科研训练.txt";
             d1="D:\\qtproject\\untitled1\\infotxt\\未审核内容\\未审核科研训练.txt";
 
-        }else if(one_text.contains("获得专利")||one_text.contains("软件著作权")||one_text.contains("其他"))
+        }
+        else if(one_text.contains("获得专利")||one_text.contains("软件著作权")||one_text.contains("其他"))
         {
             d2="D:\\qtproject\\untitled1\\infotxt\\已审核内容\\知识产权.txt";
             d1="D:\\qtproject\\untitled1\\infotxt\\未审核内容\\未审核知识产权.txt";
-        }else if(one_text.contains("学科与科技竞赛"))
+        }
+        else if(one_text.contains("学科与科技竞赛"))
         {
             d2="D:\\qtproject\\untitled1\\infotxt\\已审核内容\\学科与科技竞赛.txt";
             d1="D:\\qtproject\\untitled1\\infotxt\\未审核内容\\未审核学科与科技竞赛.txt";
-        }else if(one_text.contains("技能证书"))
+        }
+        else if(one_text.contains("技能证书"))
         {
             d2="D:\\qtproject\\untitled1\\infotxt\\已审核内容\\技能证书.txt";
             d1="D:\\qtproject\\untitled1\\infotxt\\未审核内容\\未审核技能证书.txt";
-        }else if(one_text.contains("创业实践和创新创业教育"))
+        }
+        else if(one_text.contains("创业实践和创新创业教育"))
         {
             d2="D:\\qtproject\\untitled1\\infotxt\\已审核内容\\创业实践和创新创业教育.txt";
             d1="D:\\qtproject\\untitled1\\infotxt\\未审核内容\\未审核创业实践和创新创业教育.txt";
