@@ -14,7 +14,7 @@ class Look : public QDialog
 public:
     explicit Look(QWidget *parent = 0);
     ~Look();
-    void search_txt(QString);//将QString地址文件显示table
+    void search_sql(QString);//将QString地址文件显示table
 
 private slots:
     void on_pushButton_clicked();//关闭界面

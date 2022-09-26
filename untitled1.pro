@@ -6,6 +6,7 @@
 
 QT       += core gui
 QT += multimedia
+QT+=sql
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -27,43 +28,42 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     check.cpp \
+    connectsql.cpp \
     dialog.cpp \
+    login.cpp \
     look.cpp \
     love.cpp \
         main.cpp \
-    form.cpp \
     mainwindow.cpp \
     search.cpp \
     statusframe.cpp \
     submit.cpp \
-    to_examine.cpp \
-    widget.cpp
+    to_examine.cpp
 
 HEADERS += \
     check.h \
+    connectsql.h \
     dialog.h \
-    form.h \
+    login.h \
     look.h \
     love.h \
     mainwindow.h \
     search.h \
     statusframe.h \
     submit.h \
-    to_examine.h \
-    widget.h
+    to_examine.h
 
 FORMS += \
     check.ui \
     dialog.ui \
-    form.ui \
+    login.ui \
     look.ui \
     love.ui \
     mainwindow.ui \
     search.ui \
     statusframe.ui \
     submit.ui \
-    to_examine.ui \
-    widget.ui
+    to_examine.ui
 
 DISTFILES += \
     README.md \

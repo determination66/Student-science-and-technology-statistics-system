@@ -9,9 +9,11 @@
 #include "QTableWidgetItem"
 #include "QString"
 #include "QStringList"
-#include "QFile"
 #include "QPropertyAnimation"
 #include<QDebug>
+#include"connectsql.h"
+#include<qsqlquery.h>
+#include<qmessagebox.h>
 
 Look::Look(QWidget *parent) :
     QDialog(parent),
@@ -63,39 +65,57 @@ void Look::on_pushButton_clicked()
     this->close();
 }
 
-//查询txt文件
-void Look::search_txt(QString d)
+//查询数据库文件
+void Look::search_sql(QString d)
 {
-    //读入文件中科研成果显示到table中.
-    QFile f(d);
-    f.open(QIODevice::ReadOnly | QIODevice::Text);
-    while(!f.atEnd())
+    connectsql csql;
+    QSqlQuery query=QSqlQuery(csql.GetDatabase());
+    //获取属性个数，数据库中进行查询
+    QString sql=QString("select count(*) from information_schema.COLUMNS where TABLE_SCHEMA='demo' and table_name='%1' ").arg(d);
+    query.exec(sql);
+    query.first();
+    int col=query.value(0).toInt();
+
+    //获取查询个数
+    sql=QString("select count(*) from `%1` where `issubmit`='y'").arg(d);
+    query.exec(sql);
+    query.first();
+    int sum=query.value(0).toInt();
+    qDebug()<<"查询人数为:"<<sum;
+    if(sum==0)
     {
-        //将数据提取出来
-        QByteArray line=f.readLine();
-        QString s(line);
-        if(s=="\n")continue;
-        QStringList list = s.split(" ");
+        //清空目前table
+        ui->tableWidget->clear();
+        ui->tableWidget->setColumnCount(0);
+        ui->tableWidget->setRowCount(0);
+        QMessageBox::information(this,"提示","当前没有相关信息！");
+        return;
+    }
+    //qDebug()<<"col="<<col;
+    //获取表格当中的属性
+    sql=QString("select * from `%1` where `issubmit`='y'").arg(d);
+    query.exec(sql);
+    ui->tableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);    //x先自适应宽度
+    ui->tableWidget->horizontalHeader()->setSectionResizeMode(0, QHeaderView::ResizeToContents);
+     while(query.next())
+     {
+
         int row=ui->tableWidget->rowCount();
-
-
         ui->tableWidget->insertRow(row);
         QTableWidgetItem *item;
-        for(int i=0;i<list.count();i++)
+        for(int i=0;i<col-1;i++)
         {
-            item=new QTableWidgetItem(list.at(i));
-            item->setTextAlignment(Qt::AlignCenter);
-            QFont font;
-            //font.setBold(true);//设置为粗体
-            font.setPointSize(11);//字体大小
-            item->setFont(font);
 
-            ui->tableWidget->setItem(row,i,item);
+          item=new QTableWidgetItem(query.value(i).toString());
+          item->setTextAlignment(Qt::AlignCenter);
+          QFont font;
+          //font.setBold(true);//设置为粗体
+          font.setPointSize(11);//字体大小
+          item->setFont(font);
+          ui->tableWidget->setItem(row,i,item);
         }
 
-    }
-    f.close();
-
+     }
 }
 
 //科研成果
@@ -109,7 +129,7 @@ void Look::on_pushButton_10_clicked()
     QTableWidgetItem *item;
     //设置表头
     QStringList str;
-    str<<"类别"<<"姓名"<<"学号"<<"电话"<<"成果名称"<<"备注（可写编号）";
+    str<<"姓名"<<"类型"<<"成果名称"<<"学号";
     //设置tablewidget列数
     ui->tableWidget->setColumnCount(str.count());
     //将列名称输入 table
@@ -123,8 +143,7 @@ void Look::on_pushButton_10_clicked()
 
         ui->tableWidget->setHorizontalHeaderItem(i,item);
     }
-    QString d="D:\\qtproject\\untitled1\\infotxt\\已审核内容\\科研成果.txt";
-    search_txt(d);
+    search_sql("fruit_1");
 }
 
 //科研训练
@@ -138,7 +157,8 @@ void Look::on_pushButton_3_clicked()
     QTableWidgetItem *item;
     //设置表头
     QStringList str;
-    str<<"类别"<<"姓名"<<"学号"<<"电话"<<"参加训练名称"<<"时间"<<"备注";
+    str<<"姓名"<<"成果名称"<<"时间"<<"备注"<<"账号";
+
     //设置tablewidget列数
     ui->tableWidget->setColumnCount(str.count());
     //将列名称输入 table
@@ -151,8 +171,7 @@ void Look::on_pushButton_3_clicked()
         item->setFont(font);
         ui->tableWidget->setHorizontalHeaderItem(i,item);
     }
-    QString d("D:\\qtproject\\untitled1\\infotxt\\已审核内容\\科研训练.txt");
-    search_txt(d);
+    search_sql("fruit_2");
 
 }
 
@@ -167,7 +186,7 @@ void Look::on_pushButton_5_clicked()
     QTableWidgetItem *item;
     //设置表头
     QStringList str;
-    str<<"类别"<<"姓名"<<"学号"<<"电话"<<"证书名称"<<"获得时间"<<"编号(有则填)";
+    str<<"姓名"<<"证书名称"<<"成果时间"<<"成果编号"<<"账号";
     //设置tablewidget列数
     ui->tableWidget->setColumnCount(str.count());
     //将列名称输入 table
@@ -180,8 +199,7 @@ void Look::on_pushButton_5_clicked()
         item->setFont(font);
         ui->tableWidget->setHorizontalHeaderItem(i,item);
     }
-    QString d("D:\\qtproject\\untitled1\\infotxt\\已审核内容\\技能证书.txt");
-    search_txt(d);
+       search_sql("fruit_3");
 
 }
 
@@ -196,7 +214,7 @@ void Look::on_pushButton_2_clicked()
     QTableWidgetItem *item;
     //设置表头
     QStringList str;
-    str<<"类别"<<"姓名"<<"学号"<<"电话"<<"成果名称"<<"备注（可写编号）";
+   str<<"姓名"<<"类型"<<"产权名称"<<"账号";
     //设置tablewidget列数
     ui->tableWidget->setColumnCount(str.count());
     //将列名称输入 table
@@ -209,8 +227,7 @@ void Look::on_pushButton_2_clicked()
         item->setFont(font);
         ui->tableWidget->setHorizontalHeaderItem(i,item);
     }
-    QString d("D:\\qtproject\\untitled1\\infotxt\\已审核内容\\知识产权.txt");
-    search_txt(d);
+    search_sql("fruit_4");
 }
 
 //学科与科技竞赛
@@ -224,7 +241,7 @@ void Look::on_pushButton_4_clicked()
     QTableWidgetItem *item;
     //设置表头
     QStringList str;
-    str<<"类别"<<"姓名"<<"学号"<<"电话"<<"竞赛名称"<<"级别"<<"获奖名次"<<"时间"<<"学分值";
+    str<<"姓名"<<"竞赛名称"<<"获奖名次"<<"获奖实践"<<"学号";
     //设置tablewidget列数
     ui->tableWidget->setColumnCount(str.count());
     //将列名称输入 table
@@ -237,8 +254,7 @@ void Look::on_pushButton_4_clicked()
         item->setFont(font);
         ui->tableWidget->setHorizontalHeaderItem(i,item);
     }
-    QString d("D:\\qtproject\\untitled1\\infotxt\\已审核内容\\学科与科技竞赛.txt");
-    search_txt(d);
+       search_sql("fruit_5");
 }
 
 //创业实践和创新创业教育
@@ -252,7 +268,7 @@ void Look::on_pushButton_6_clicked()
     QTableWidgetItem *item;
     //设置表头
     QStringList str;
-    str<<"类别"<<"姓名"<<"学号"<<"参加创业实践或创新创业教育名称"<<"参加时间"<<"是否有证书";
+    str<<"姓名"<<"实践名称"<<"参加时间"<<"学号";
     //设置tablewidget列数
     ui->tableWidget->setColumnCount(str.count());
     //qDebug()<<"创新时间"<<str.count();
@@ -266,6 +282,5 @@ void Look::on_pushButton_6_clicked()
         item->setFont(font);
         ui->tableWidget->setHorizontalHeaderItem(i,item);
     }
-    QString d("D:\\qtproject\\untitled1\\infotxt\\已审核内容\\创业实践和创新创业教育.txt");
-    search_txt(d);
+       search_sql("fruit_6");
 }

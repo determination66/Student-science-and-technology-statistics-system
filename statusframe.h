@@ -16,7 +16,7 @@ public:
     ~Statusframe();
 
 private slots:
-    void on_pushButton_clicked();//保存 到对应文件
+    void on_pushButton_clicked();//保存到数据库中
 
     void on_pushButton_8_clicked();//查看目前通过成果
 

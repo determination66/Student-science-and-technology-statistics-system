@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QMediaPlayer>
+
 namespace Ui {
 class MainWindow;
 }
@@ -20,13 +21,18 @@ private slots:
 
     void on_pushButton_2_clicked();//个人成果查询
 
-    void on_pushButton_3_clicked();//管理员界面
-
     void on_pushButton_5_clicked();//关闭界面
 
     void on_pushButton_4_clicked();//报错
 
     void on_toolButton_clicked();//背景音乐播放
+
+    void GetData(QString);
+public:
+    Ui::MainWindow* GetUi()
+    {
+        return ui;
+    }
 
 private:
     Ui::MainWindow *ui;

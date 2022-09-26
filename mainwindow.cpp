@@ -7,7 +7,6 @@
 #include "ui_mainwindow.h"
 #include "dialog.h"
 #include "search.h"
-#include "check.h"
 #include "love.h"
 #include "QPropertyAnimation"
 #include <QMediaPlaylist>
@@ -55,8 +54,8 @@ MainWindow::MainWindow(QWidget *parent) :
     player=new QMediaPlayer;
     player->setPlaylist(playlist);
     player->play();
+    //先关闭背景音乐
     on_toolButton_clicked();
-
 
 }
 
@@ -81,12 +80,6 @@ void MainWindow::on_pushButton_2_clicked()
     p.exec();
 }
 
-//权限界面
-void MainWindow::on_pushButton_3_clicked()
-{
-    Check p;
-    p.exec();
-}
 
 //用户界面
 void MainWindow::on_pushButton_4_clicked()
@@ -99,6 +92,12 @@ void MainWindow::on_pushButton_4_clicked()
 void MainWindow::on_pushButton_5_clicked()
 {
     this->close();
+}
+
+
+void MainWindow::GetData(QString str)
+{
+    qDebug()<<"mainwindow接收账号"<<str;
 }
 
 

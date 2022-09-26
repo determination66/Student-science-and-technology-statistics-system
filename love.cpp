@@ -7,7 +7,7 @@
 #include "ui_love.h"
 #include "QPropertyAnimation"
 #include "QString"
-#include "QFile"
+#include"connectsql.h"
 
 Love::Love(QWidget *parent) :
     QDialog(parent),
@@ -44,11 +44,19 @@ Love::~Love()
 void Love::on_pushButton_clicked()
 {
     QString errinfo=ui->textEdit->toPlainText();
-    QFile f("D:\\qtproject\\untitled1\\infotxt\\错误信息\\错误.txt");
-    f.open(QIODevice::Append | QIODevice::Text);
-    f.write(errinfo.toUtf8()+'\n');
-    f.close();
-    this->close();
+    connectsql csql;
+    QSqlQuery query=QSqlQuery(csql.GetDatabase());
+    QString sql=QString("insert into feedback (`text`) values ('%1')").arg(errinfo);
+    bool ok=query.exec(sql);
+    if(ok)
+    {
+        QMessageBox::information(this,"提示","谢谢反馈！");
+        this->show();
+    }
+    else
+    {
+        QMessageBox::warning(this,"提示","反馈信息提交失败，请稍后提交!");
+    }
 }
 
 //关闭界面

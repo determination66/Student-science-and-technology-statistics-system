@@ -1,7 +1,6 @@
 /*
  * 学生查找自己的成果
  * 通过颜色辨别是否审核
- * 2021-03-09-xsq
  */
 
 #include "search.h"
@@ -10,7 +9,9 @@
 #include <QString>
 #include <QListWidgetItem>
 #include <QFile>
+#include<QMessageBox>
 #include "QPropertyAnimation"
+#include"connectsql.h"
 
 Search::Search(QWidget *parent) :
     QDialog(parent),
@@ -46,68 +47,73 @@ Search::~Search()
     delete ui;
 }
 
-void Search::sear(QString name,QString d,int color)
+void Search::sear(QString name)
 {
-
     QListWidgetItem *item;
-    QFile f(d);
-    f.open(QIODevice::ReadOnly | QIODevice::Text);
-    while(!f.atEnd())
+    connectsql csql;
+    QSqlQuery query=QSqlQuery(csql.GetDatabase());
+    QString d[6]={"fruit_1","fruit_2","fruit_3","fruit_4","fruit_5","fruit_6"};
+    QString tit[6]={
+        "科研成果\t\t姓名\t类型\t成果名称\t账号",
+        "知识产权\t\t姓名\t类型\t成果名称\t账号",
+        "科研训练\t\t姓名\t成果名称\t时间\t备注\t账号",
+        "学科与科技竞赛\t\t姓名\t竞赛名称\t获奖名次\t获奖时间\t账号",
+        "技能证书\t姓名\t证书名称\t成果时间\t成果编号\t账号",
+        "创业实践和创新教育\t\t姓名\t实践名称\t成果时间\t账号"
+    };
+    int sum=0;
+    for(int i=0;i<6;i++)
     {
-        QByteArray line=f.readLine();
-        QString str(line);
-        if(str.contains(name))
+        item=new QListWidgetItem;
+        QFont font;
+        font.setBold(true);//设置为粗体
+        font.setPointSize(14);//字体大小
+        item->setFont(font);
+        //未查询到当前信息
+        item->setText(tit[i]);
+        //将对应类别和信息显示到list
+        item->setSizeHint(QSize(100, 100));
+        ui->listWidget->addItem(item);//添加一个list中的对象
+        QString sql=QString("select count(*) from information_schema.COLUMNS where TABLE_SCHEMA='demo' and table_name='%1'").arg(d[i]);
+        qDebug()<<query.exec(sql);
+        query.first();
+        int col=query.value(0).toInt();
+        //qDebug()<<"col="<<col;
+        sql=QString("select * from `%1` where `name` like'%2'").arg(d[i]).arg(name);
+        query.exec(sql);
+        int k=0;
+        while(query.next())
         {
-
-            item=new QListWidgetItem;
-            QFont font;
-            //font.setBold(true);//设置为粗体
-            font.setPointSize(11);//字体大小
-            item->setFont(font);
-
-            item->setText(str);//将对应类别和信息显示到list
-            //if(!color)item->setBackgroundColor(QColor("red"));
-            if(!color)item->setBackground(QColor("red"));//未通过显示红色背景
-            else item->setBackground(QColor("green"));//通过显示绿色背景
-            item->setSizeHint(QSize(100, 100));
-            ui->listWidget->addItem(item);//添加一个list中的对象
+            k++;
+            QString line="";
+           for(int j=0;j<col-1;j++)
+           {
+                line=line+"\t"+query.value(j).toString()+"\t";
+           }
+           //qDebug()<<line;
+           item=new QListWidgetItem;
+           QFont font;
+           //font.setBold(true);//设置为粗体
+           font.setPointSize(11);//字体大小
+           item->setFont(font);
+           item->setText(line);
+           //将对应类别和信息显示到list
+           if(query.value("issubmit").toString()=="n")
+           item->setBackground(QColor("pink"));//未通过显示红色背景
+           else item->setBackground(QColor("lightgreen"));//通过显示绿色背景
+           item->setSizeHint(QSize(100, 100));
+           ui->listWidget->addItem(item);//添加一个list中的对象
         }
+        sum+=k;
     }
-    f.close();
+    qDebug()<<"总计的个数为："<<sum;
 }
 
 void Search::on_pushButton_clicked()
 {
     ui->listWidget->clear();
     QString name=ui->lineEdit->text();
-    //审核通过
-    QString d1="D:\\qtproject\\untitled1\\infotxt\\已审核内容\\科研成果.txt";
-    QString d2="D:\\qtproject\\untitled1\\infotxt\\已审核内容\\知识产权.txt";
-    QString d3="D:\\qtproject\\untitled1\\infotxt\\已审核内容\\科研训练.txt";
-    QString d4="D:\\qtproject\\untitled1\\infotxt\\已审核内容\\学科与科技竞赛.txt";
-    QString d5="D:\\qtproject\\untitled1\\infotxt\\已审核内容\\技能证书.txt";
-    QString d6="D:\\qtproject\\untitled1\\infotxt\\已审核内容\\创业实践和创新创业教育.txt";
-    sear(name,d1,1);
-    sear(name,d2,1);
-    sear(name,d3,1);
-    sear(name,d4,1);
-    sear(name,d5,1);
-    sear(name,d6,1);
-    //未审核
-    d1="D:\\qtproject\\untitled1\\infotxt\\未审核内容\\未审核科研成果.txt";
-    d2="D:\\qtproject\\untitled1\\infotxt\\未审核内容\\未审核知识产权.txt";
-    d3="D:\\qtproject\\untitled1\\infotxt\\未审核内容\\未审核科研训练.txt";
-    d4="D:\\qtproject\\untitled1\\infotxt\\未审核内容\\未审核学科与科技竞赛.txt";
-    d5="D:\\qtproject\\untitled1\\infotxt\\未审核内容\\未审核技能证书.txt";
-    d6="D:\\qtproject\\untitled1\\infotxt\\未审核内容\\未审核创业实践和创新创业教育.txt";
-
-    sear(name,d1,0);
-    sear(name,d2,0);
-    sear(name,d3,0);
-    sear(name,d4,0);
-    sear(name,d5,0);
-    sear(name,d6,0);
-
+    sear(name);
     if(ui->listWidget->count()==0)
     {
         QListWidgetItem *item=new QListWidgetItem;

@@ -1,7 +1,6 @@
 /*
  * 导员审核成果
  * 通过保存到对应文件 未通过数据删除
- * 2021-03-11-xsq
  */
 #include "to_examine.h"
 #include "ui_to_examine.h"
@@ -76,19 +75,11 @@ void To_examine::qing()
     ui->label_3->setText("");
 }
 
-//具体每行数据显示
-void To_examine::open_txt(QString d)
+//具体每行数据
+void To_examine::open_sql(QString d)
 {
-//    QFile f("D:\\qtproject\\untitled1\\infotxt\\未审核内容\\未审核技能证书.txt");
     QFile f(d);
-//     if(d=="D:\\qtproject\\untitled1\\infotxt\\未审核内容\\未审核科研训练.txt")
-//     {
-//         QMessageBox::information(this,"tips","the same!");
-//     }
-//     else
-//     {
-//      QMessageBox::information(this,"tips","not the same!");
-//     }
+
      if(!f.open(QIODevice::ReadOnly))
      {
          qDebug()<<"无法打开文件";
@@ -221,7 +212,7 @@ void To_examine::on_pushButton_11_clicked()
         ui->tableWidget->setHorizontalHeaderItem(i,item);
     }
     QString d="D:\\qtproject\\untitled1\\infotxt\\未审核内容\\未审核科研成果.txt";
-    open_txt(d);
+    open_sql(d);
 }
 
 //科研训练
@@ -246,7 +237,7 @@ void To_examine::on_pushButton_8_clicked()
         ui->tableWidget->setHorizontalHeaderItem(i,item);
     }
     QString d="D:\\qtproject\\untitled1\\infotxt\\未审核内容\\未审核科研训练.txt";
-    open_txt(d);
+    open_sql(d);
 }
 
 //技能证书
@@ -271,7 +262,7 @@ void To_examine::on_pushButton_12_clicked()
         ui->tableWidget->setHorizontalHeaderItem(i,item);
     }
     QString d="D:\\qtproject\\untitled1\\infotxt\\未审核内容\\未审核技能证书.txt";
-    open_txt(d);
+    open_sql(d);
 }
 
 //知识产权
@@ -296,7 +287,7 @@ void To_examine::on_pushButton_7_clicked()
         ui->tableWidget->setHorizontalHeaderItem(i,item);
     }
     QString d="D:\\qtproject\\untitled1\\infotxt\\未审核内容\\未审核知识产权.txt";
-    open_txt(d);
+    open_sql(d);
 }
 
 //学科与科技竞赛
@@ -321,7 +312,7 @@ void To_examine::on_pushButton_9_clicked()
         ui->tableWidget->setHorizontalHeaderItem(i,item);
     }
     QString d="D:\\qtproject\\untitled1\\infotxt\\未审核内容\\未审核学科与科技竞赛.txt";
-    open_txt(d);
+    open_sql(d);
 }
 
 //创业实践和创新创业教育
@@ -346,7 +337,7 @@ void To_examine::on_pushButton_13_clicked()
         ui->tableWidget->setHorizontalHeaderItem(i,item);
     }
     QString d="D:\\qtproject\\untitled1\\infotxt\\未审核内容\\未审核创业实践和创新创业教育.txt";
-    open_txt(d);
+    open_sql(d);
 }
 
 //关界面

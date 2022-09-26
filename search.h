@@ -18,7 +18,7 @@ public:
 private slots:
     void on_pushButton_clicked();//查找各个文件
 
-    void sear(QString name,QString d,int color);//在文件中查找 name 同名的成果并用QTableWidget显示
+    void sear(QString name);//在文件中查找 name 同名的成果并用QTableWidget显示
 
     void on_pushButton_2_clicked();//关闭界面
 

@@ -2,5 +2,6 @@
     <qresource prefix="/">
         <file>background.png</file>
         <file>wust.png</file>
+        <file>login.jpg</file>
     </qresource>
 </RCC>

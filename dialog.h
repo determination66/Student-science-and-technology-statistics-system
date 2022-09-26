@@ -3,6 +3,8 @@
 
 #include <QDialog>
 #include <QListWidgetItem>
+
+
 #define N 5
 namespace Ui {
 class Dialog;
@@ -17,12 +19,9 @@ public:
     ~Dialog();
 
 private slots:
-
+    void save(QString d,QString sstr,QListWidgetItem *item,QString name,QString student_num,QString student_lel);
 
     void textchange(QListWidgetItem*);//双击行后 开启编辑
-
-    //保存科研成果文件
-    void save(QString,QString str,QListWidgetItem*,QString anme,QString student_num,QString student_lel);//点击后编辑 保存到文件里
 
     void on_pushButton_clicked();//提交数据
 

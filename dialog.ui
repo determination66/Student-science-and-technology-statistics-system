@@ -29,13 +29,7 @@
        <enum>QLayout::SetDefaultConstraint</enum>
       </property>
       <item>
-       <layout class="QHBoxLayout" name="horizontalLayout_2">
-        <property name="spacing">
-         <number>7</number>
-        </property>
-        <property name="sizeConstraint">
-         <enum>QLayout::SetMinAndMaxSize</enum>
-        </property>
+       <layout class="QHBoxLayout" name="horizontalLayout_9">
         <item>
          <widget class="QLabel" name="label_2">
           <property name="font">

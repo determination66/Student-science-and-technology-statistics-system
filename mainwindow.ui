@@ -78,8 +78,12 @@
           <string notr="true">QPushButton { 
 background-color: rgb(0, 155, 240);
  border-radius: 3px;
- color: rgb(255, 255, 255); } 
-QPushButton:hover { background-color: rgb(245, 69, 255); }</string>
+ color: rgb(255, 255, 255);
+ } 
+QPushButton:hover
+ { 
+background-color: rgb(245, 69, 255); 
+}</string>
          </property>
          <property name="text">
           <string>录入个人数据</string>
@@ -105,28 +109,6 @@ QPushButton:hover { background-color: rgb(245, 69, 255); }</string>
          </property>
          <property name="text">
           <string>个人成果查询</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="pushButton_3">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="MinimumExpanding" vsizetype="Minimum">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="font">
-          <font>
-           <family>Arial</family>
-           <pointsize>16</pointsize>
-          </font>
-         </property>
-         <property name="styleSheet">
-          <string notr="true">QPushButton { background-color: rgb(0, 155, 240); border-radius: 3px; color: rgb(255, 255, 255); } QPushButton:hover { background-color: rgb(245, 69, 255); }</string>
-         </property>
-         <property name="text">
-          <string>管理员界面</string>
          </property>
         </widget>
        </item>

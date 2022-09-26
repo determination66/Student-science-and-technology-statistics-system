@@ -39,8 +39,8 @@ Statusframe::Statusframe(QWidget *parent) :
     //设置文字竖排显示
     ui->label_2->setText("管\n理\n员\n");
     //设置Lable文字居中
-    ui->label->setAlignment(Qt::AlignCenter);
-    ui->label_3->setAlignment(Qt::AlignHCenter);
+    //ui->label->setAlignment(Qt::AlignCenter);
+    //ui->label_3->setAlignment(Qt::AlignHCenter);
 
     //进入动画
     QPropertyAnimation *animation = new QPropertyAnimation(this, "windowOpacity");
@@ -55,65 +55,68 @@ Statusframe::~Statusframe()
     delete ui;
 }
 
-//保存 到对应文件
+//更新，保存数据库中
 void Statusframe::on_pushButton_clicked()
 {
-    QString str=ui->textEdit->toPlainText();
-    if(str=="")
-    {
-        ui->label_4->setText("请输入地址");
-        return;
-    }
-    QFile f(str);
-    if(!f.open(QIODevice::ReadOnly | QIODevice::Text))
-    {
-        ui->label_4->setText("地址错误");
-        return;
-    }
 
-    //f.open(QIODevice::ReadOnly | QIODevice::Text);
-    while(!f.atEnd())
-    {
-        //国家级省级科技成果奖,论文,在报刊杂志上发表作品,其它
-        QByteArray line=f.readLine();
-        QString str(line);
-        if(str.startsWith("国家级省级科技成果奖")||str.startsWith("论文")||str.startsWith("在报刊杂志上发表作品")||str.startsWith("其它"))
-        {
-            QFile ff("E:\\Qt\\hello\\datastructure\\大学生课外科技活动成果\\科研成果.txt");
-            ff.open(QIODevice::Append|QIODevice::Text);
-            ff.write(str.toUtf8()+'\n');
-        }
-        else if(str.startsWith("获得专利")||str.startsWith("软件著作权")||str.startsWith("其他"))
-        {
-            QFile ff("E:\\Qt\\hello\\datastructure\\大学生课外科技活动成果\\知识产权.txt");
-            ff.open(QIODevice::Append|QIODevice::Text);
-            ff.write(str.toUtf8()+'\n');
-        }
-        else if(str.startsWith("科研训练"))
-        {
-            QFile ff("E:\\Qt\\hello\\datastructure\\大学生课外科技活动成果\\科研训练.txt");
-            ff.open(QIODevice::Append|QIODevice::Text);
-            ff.write(str.toUtf8()+'\n');
-        }else if(str.startsWith("学科与科技竞赛"))
-        {
-            QFile ff("E:\\Qt\\hello\\datastructure\\大学生课外科技活动成果\\学科与科技竞赛.txt");
-            ff.open(QIODevice::Append|QIODevice::Text);
-            ff.write(str.toUtf8()+'\n');
-        }else if(str.startsWith("技能证书"))
-        {
-            QFile ff("E:\\Qt\\hello\\datastructure\\大学生课外科技活动成果\\技能证书.txt");
-            ff.open(QIODevice::Append|QIODevice::Text);
-            ff.write(str.toUtf8()+'\n');
-        }else if(str.startsWith("创业实践和创新创业教育"))
-        {
-            QFile ff("E:\\Qt\\hello\\datastructure\\大学生课外科技活动成果\\创业实践和创新创业教育.txt");
-            ff.open(QIODevice::Append|QIODevice::Text);
-            ff.write(str.toUtf8()+'\n');
-        }
-    }
-    ui->label_4->setText("导入成功");
-    ui->textEdit->clear();
 }
+//{
+//    //QString str=ui->textEdit->toPlainText();
+//    if(str=="")
+//    {
+//        ui->label_4->setText("请输入地址");
+//        return;
+//    }
+//    QFile f(str);
+//    if(!f.open(QIODevice::ReadOnly | QIODevice::Text))
+//    {
+//        ui->label_4->setText("地址错误");
+//        return;
+//    }
+
+//    //f.open(QIODevice::ReadOnly | QIODevice::Text);
+//    while(!f.atEnd())
+//    {
+//        //国家级省级科技成果奖,论文,在报刊杂志上发表作品,其它
+//        QByteArray line=f.readLine();
+//        QString str(line);
+//        if(str.startsWith("国家级省级科技成果奖")||str.startsWith("论文")||str.startsWith("在报刊杂志上发表作品")||str.startsWith("其它"))
+//        {
+//            QFile ff("E:\\Qt\\hello\\datastructure\\大学生课外科技活动成果\\科研成果.txt");
+//            ff.open(QIODevice::Append|QIODevice::Text);
+//            ff.write(str.toUtf8()+'\n');
+//        }
+//        else if(str.startsWith("获得专利")||str.startsWith("软件著作权")||str.startsWith("其他"))
+//        {
+//            QFile ff("E:\\Qt\\hello\\datastructure\\大学生课外科技活动成果\\知识产权.txt");
+//            ff.open(QIODevice::Append|QIODevice::Text);
+//            ff.write(str.toUtf8()+'\n');
+//        }
+//        else if(str.startsWith("科研训练"))
+//        {
+//            QFile ff("E:\\Qt\\hello\\datastructure\\大学生课外科技活动成果\\科研训练.txt");
+//            ff.open(QIODevice::Append|QIODevice::Text);
+//            ff.write(str.toUtf8()+'\n');
+//        }else if(str.startsWith("学科与科技竞赛"))
+//        {
+//            QFile ff("E:\\Qt\\hello\\datastructure\\大学生课外科技活动成果\\学科与科技竞赛.txt");
+//            ff.open(QIODevice::Append|QIODevice::Text);
+//            ff.write(str.toUtf8()+'\n');
+//        }else if(str.startsWith("技能证书"))
+//        {
+//            QFile ff("E:\\Qt\\hello\\datastructure\\大学生课外科技活动成果\\技能证书.txt");
+//            ff.open(QIODevice::Append|QIODevice::Text);
+//            ff.write(str.toUtf8()+'\n');
+//        }else if(str.startsWith("创业实践和创新创业教育"))
+//        {
+//            QFile ff("E:\\Qt\\hello\\datastructure\\大学生课外科技活动成果\\创业实践和创新创业教育.txt");
+//            ff.open(QIODevice::Append|QIODevice::Text);
+//            ff.write(str.toUtf8()+'\n');
+//        }
+//    }
+//    ui->label_4->setText("导入成功");
+//    //ui->textEdit->clear();
+//}
 
 //导员查看通过数据
 void Statusframe::on_pushButton_8_clicked()
