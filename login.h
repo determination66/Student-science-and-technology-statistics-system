@@ -7,6 +7,8 @@
 #include <QAbstractButton>
 #include <QKeyEvent>
 #include<QMessageBox>
+#include"addstu.h"
+#include"loginmenu.h"
 
 
 namespace Ui {
@@ -35,14 +37,22 @@ private slots:
     //管理员登录
     void on_bt_admin_clicked();
 
+    void on_bt_addstu_clicked();
+
 signals:
     //传递账号给分页面
     void sendData(QString);
 private:
     Ui::login *ui;
 
-    //分页面--对象--有账号
+    //分页面
     MainWindow mw;
+
+    //分页面--登录
+    LoginMenu lm;
+
+    //注册
+    addstu a;
 
 };
 

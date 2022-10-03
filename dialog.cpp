@@ -8,7 +8,6 @@
 #include "ui_dialog.h"
 #include <QListWidget>
 #include <QListWidgetItem>
-#include <QFile>
 #include <QString>
 #include <QRadioButton>
 #include "QPropertyAnimation"
@@ -67,7 +66,7 @@ void Dialog::save(QString d,QString sstr,
     //插入信息到指定表当中  类型 成果名 姓名 学号
     QString sql=QString("insert into `%1` (`type`,`fruitname`,`name`,`usernum`) values ('%2','%3','%4','%5')")
             .arg(d).arg(sstr).arg(str).arg(name).arg(student_num);
-    qDebug()<<d<<sstr<<str<<name<<student_num;
+    //qDebug()<<d<<sstr<<str<<name<<student_num;
     bool ok=query.exec(sql);
     if(ok)
     {
@@ -76,6 +75,7 @@ void Dialog::save(QString d,QString sstr,
     }
     else
     {
+       //sql=QString
         QMessageBox::warning(this,"提示","上报成果失败！");
         //qDebug()<<"上报成果失败！";
     }
@@ -100,11 +100,10 @@ void Dialog::on_pushButton_clicked()
             if(i==0&&str!="获得的国家级、省级科技成果奖")
             {
                 c++;
+                save(d,"获得的国家级、省级科技成果奖",item,name,student_num,student_lel);
             }else if(i==1&&str!="在公开出版的学术期刊上发表的论文以及被省级以上学术会议收录的论文")
             {
                 c++;
-
-
                 save(d,"论文",item,name,student_num,student_lel);
             }
             else if(i==2&&str!="在报刊、杂志上发表作品")

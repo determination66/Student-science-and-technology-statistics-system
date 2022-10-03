@@ -27,39 +27,51 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 
 SOURCES += \
+    addstu.cpp \
     check.cpp \
     connectsql.cpp \
     dialog.cpp \
+    feedback.cpp \
     login.cpp \
+    loginmenu.cpp \
     look.cpp \
     love.cpp \
         main.cpp \
     mainwindow.cpp \
+    managestu.cpp \
     search.cpp \
     statusframe.cpp \
     submit.cpp \
     to_examine.cpp
 
 HEADERS += \
+    addstu.h \
     check.h \
     connectsql.h \
     dialog.h \
+    feedback.h \
     login.h \
+    loginmenu.h \
     look.h \
     love.h \
     mainwindow.h \
+    managestu.h \
     search.h \
     statusframe.h \
     submit.h \
     to_examine.h
 
 FORMS += \
+    addstu.ui \
     check.ui \
     dialog.ui \
+    feedback.ui \
     login.ui \
+    loginmenu.ui \
     look.ui \
     love.ui \
     mainwindow.ui \
+    managestu.ui \
     search.ui \
     statusframe.ui \
     submit.ui \

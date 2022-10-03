@@ -46,7 +46,7 @@ Check::~Check()
 void Check::on_pushButton_clicked()
 {
     QString str=ui->lineEdit->text();
-    if(str=="123456")
+    if(str=="123")
     {
         this->close();
         Statusframe p;

@@ -1,3 +1,4 @@
+
 /*
  * 导员审核成果
  * 通过保存到对应文件 未通过数据删除
@@ -12,6 +13,7 @@
 #include "QPropertyAnimation"
 #include<qdebug.h>
 #include<QMessageBox>
+#include"connectsql.h"
 
 To_examine::To_examine(QWidget *parent) :
     QDialog(parent),
@@ -19,6 +21,7 @@ To_examine::To_examine(QWidget *parent) :
 {
 
     ui->setupUi(this);
+    sub=NULL;
     //设置界面标题
     setWindowTitle(QString("大学生课外科技活动成果管理系统"));
     //设置界面图标
@@ -48,15 +51,8 @@ To_examine::To_examine(QWidget *parent) :
 
 To_examine::~To_examine()
 {
+    delete sub;
     delete ui;
-}
-
-//排序
-void To_examine::sort(int column)
-{
-    static bool f = true;
-    ui->tableWidget->sortByColumn(column, f ? Qt::AscendingOrder : Qt::DescendingOrder);
-    f = !f;
 }
 
 //关闭界面
@@ -69,6 +65,11 @@ void To_examine::on_pushButton_clicked()
 //清空目前列表
 void To_examine::qing()
 {
+    if(sub!=NULL)
+    {
+        delete sub;
+        sub=NULL;
+    }
     ui->tableWidget->clear();
     ui->tableWidget->setColumnCount(0);
     ui->tableWidget->setRowCount(0);
@@ -78,116 +79,97 @@ void To_examine::qing()
 //具体每行数据
 void To_examine::open_sql(QString d)
 {
-    QFile f(d);
-
-     if(!f.open(QIODevice::ReadOnly))
-     {
-         qDebug()<<"无法打开文件";
-     };
-//   qDebug()<<d;
-//   qDebug()<<"D:\\qtproject\\untitled1\\infotxt\\未审核内容\\未审核技能证书.txt";
-
-    while(!f.atEnd())
+    connectsql csql;
+    QSqlQuery query=QSqlQuery(csql.GetDatabase());
+    //获取属性个数，数据库中进行查询
+    QString sql=QString("select count(*) from information_schema.COLUMNS where TABLE_SCHEMA='demo' and table_name='%1' ").arg(d);
+    qDebug()<<query.exec(sql);
+    query.first();
+    int col=query.value(0).toInt();
+    qDebug()<<"数据库的col="<<col;
+    //获取查询个数
+    sql=QString("select count(*) from `%1` where `issubmit`='un'").arg(d);
+    query.exec(sql);
+    query.first();
+    int sum=query.value(0).toInt();
+    qDebug()<<"查询人数为:"<<sum;
+    if(sum==0)
     {
-        //将数据提取出来
-        QByteArray line=f.readLine();
-        QString s(line);if(s=="\n")continue;
-        QStringList list = s.split(" ");
+        //清空目前table
+        ui->tableWidget->clear();
+        ui->tableWidget->setColumnCount(0);
+        ui->tableWidget->setRowCount(0);
+        QMessageBox::information(this,"提示","当前没有相关信息！");
+        return;
+    }
+    //qDebug()<<"col="<<col;
+    //获取表格当中的属性
+    sql=QString("select * from `%1` where `issubmit`='un'").arg(d);
+    query.exec(sql);
+    ui->tableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);    //x先自适应宽度
+    ui->tableWidget->horizontalHeader()->setSectionResizeMode(0, QHeaderView::ResizeToContents);
+    ui->tableWidget->setStyleSheet("selection-background-color:pink");//设置选中颜色：粉色
+     while(query.next())
+     {
         int row=ui->tableWidget->rowCount();
+        qDebug()<<"row="<<row;
         ui->tableWidget->insertRow(row);
         QTableWidgetItem *item;
-        qDebug()<<list.count();
-        for(int i=0;i<list.count();i++)
+        item=new QTableWidgetItem(query.value("id").toString());
+        item->setTextAlignment(Qt::AlignCenter);
+        QFont font;
+        font.setPointSize(11);//字体大小
+        item->setFont(font);
+        ui->tableWidget->setItem(row,0,item);
+//      输出信息，然后最后一列输入
+        for(int i=0;i<col-2;i++)
         {
+         item=new QTableWidgetItem(query.value(i).toString());
+          item->setTextAlignment(Qt::AlignCenter);
+          QFont font;
+          //font.setBold(true);//设置为粗体
+          font.setPointSize(11);//字体大小
+          item->setFont(font);
+          ui->tableWidget->setItem(row,i+1,item);
+         }
 
-            item=new QTableWidgetItem(list.at(i));
-            QFont font;
-            font.setBold(true);//设置为粗体
-            font.setPointSize(11);//字体大小
-            item->setFont(font);
-            item->setTextAlignment(Qt::AlignHCenter);
-            qDebug()<<row<<" "<<i<<" "<<list.at(i);
-            ui->tableWidget->setItem(row,i,item);
-        }
-        item=new QTableWidgetItem;
-        item->setCheckState(Qt::Unchecked);
-        ui->tableWidget->setItem(row,ui->tableWidget->columnCount()-1,item);
-    }
-    f.close();
+        QPushButton *btnPass = new QPushButton;
+        QPushButton *btnUnPass = new QPushButton;// 创建按钮
+        btnPass->setText(QString("通过"));					// 设置按钮名称
+        ui->tableWidget->setCellWidget(row,ui->tableWidget->columnCount()-2,btnPass);
+        connect(btnPass, &QPushButton::clicked,[=]()
+        {
+            connectsql cl;
+            QString valueid = ui->tableWidget->model()->index(row,0).data().toString();
+           // qDebug() << "cell内容： " << valueid;
+            QString sl=QString("update `%1` set `issubmit`='y' where `id`='%2'").arg(d).arg(valueid);
+            QSqlQuery q=QSqlQuery(cl.GetDatabase());
+            qDebug()<<q.exec(sl);
+            btnPass->setDisabled(true);
+            btnUnPass->hide();
+            btnPass->setText("已通过！");
+         });
 
-}
 
-//提交 审核过数据
-void To_examine::on_pushButton_14_clicked()
-{
-    if(ui->tableWidget->rowCount()==0)return;
-    QTableWidgetItem *item=new QTableWidgetItem(ui->tableWidget->item(0,0)->text());
-    //提取第一个字节 分列别
-
-    if(item!=NULL){
-    //提取出item text
-        QString one_text=ui->tableWidget->item(0,0)->text(),d1,d2;
-        if(one_text=="国家级省级科技成果奖"||one_text=="论文"||one_text=="在报刊、杂志上发表作品"||one_text=="其它")
+        btnUnPass->setText(QString("不通过"));		// 设置按钮名称.
+        ui->tableWidget->setCellWidget(row,ui->tableWidget->columnCount()-1,btnUnPass);
+        connect(btnUnPass, &QPushButton::clicked,[=]()
         {
-            d2="D:\\qtproject\\untitled1\\infotxt\\已审核内容\\科研成果.txt";
-            d1="D:\\qtproject\\untitled1\\infotxt\\未审核内容\\未审核科研成果.txt";
-        }
-        else if(one_text.contains("科研训练"))
-        {
-            d2="D:\\qtproject\\untitled1\\infotxt\\已审核内容\\科研训练.txt";
-            d1="D:\\qtproject\\untitled1\\infotxt\\未审核内容\\未审核科研训练.txt";
-
-        }
-        else if(one_text.contains("获得专利")||one_text.contains("软件著作权")||one_text.contains("其他"))
-        {
-            d2="D:\\qtproject\\untitled1\\infotxt\\已审核内容\\知识产权.txt";
-            d1="D:\\qtproject\\untitled1\\infotxt\\未审核内容\\未审核知识产权.txt";
-        }
-        else if(one_text.contains("学科与科技竞赛"))
-        {
-            d2="D:\\qtproject\\untitled1\\infotxt\\已审核内容\\学科与科技竞赛.txt";
-            d1="D:\\qtproject\\untitled1\\infotxt\\未审核内容\\未审核学科与科技竞赛.txt";
-        }
-        else if(one_text.contains("技能证书"))
-        {
-            d2="D:\\qtproject\\untitled1\\infotxt\\已审核内容\\技能证书.txt";
-            d1="D:\\qtproject\\untitled1\\infotxt\\未审核内容\\未审核技能证书.txt";
-        }
-        else if(one_text.contains("创业实践和创新创业教育"))
-        {
-            d2="D:\\qtproject\\untitled1\\infotxt\\已审核内容\\创业实践和创新创业教育.txt";
-            d1="D:\\qtproject\\untitled1\\infotxt\\未审核内容\\未审核创业实践和创新创业教育.txt";
-        }
-        QFile f1(d1);
-        f1.open(QIODevice::ReadOnly | QIODevice::Text);
-        QFile f2(d2);
-        f2.open(QIODevice::Append | QIODevice::Text);
-        int row_count=ui->tableWidget->rowCount(),c_count=ui->tableWidget->columnCount();
-        for(int i=0;i<row_count;i++)
-        {
-            item=ui->tableWidget->item(i,c_count-1);
-            QByteArray line=f1.readLine();
-            QString s(line);
-            if(item->checkState()==Qt::Checked)
-            {
-                f2.write(s.toUtf8());
+            connectsql cl;
+            QString valueid = ui->tableWidget->model()->index(row,0).data().toString();
+            //qDebug() << "cell内容： " << valueid;
+            QString sl=QString("update `%1` set `issubmit`='n' where `id`='%2'").arg(d).arg(valueid);
+            QSqlQuery q=QSqlQuery(cl.GetDatabase());
+            if(!q.exec(sl)){
+                QMessageBox::warning(this,"提示","操作失败！");
             }
-        }
-
-        f1.close();
-        f2.close();
-        //清空未审核txt文件
-        QFile shan(d1);
-        shan.open(QIODevice::WriteOnly|QIODevice::Truncate);
-        shan.close();
-        ui->label_3->setText("保存成功");
-    }
-
-    //清空列表
-    ui->tableWidget->clear();
-    ui->tableWidget->setColumnCount(0);
-    ui->tableWidget->setRowCount(0);
+            btnUnPass->setDisabled(true);
+            btnPass->hide();
+            btnUnPass->setText("未通过！");
+         });
+     }
 }
+
 
 //科研成果数据显示
 void To_examine::on_pushButton_11_clicked()
@@ -198,7 +180,7 @@ void To_examine::on_pushButton_11_clicked()
     QTableWidgetItem *item;
     //设置表头
     QStringList str;
-    str<<"类别"<<"姓名"<<"学号"<<"电话"<<"成果名称"<<"备注（可写编号）"<<"是否通过";
+    str<<"编号"<<"姓名"<<"类型"<<"成果名称"<<"学号"<<"通过"<<"不通过";
     //设置tablewidget列数
     ui->tableWidget->setColumnCount(str.count());
     //将列名称输入 table
@@ -211,7 +193,7 @@ void To_examine::on_pushButton_11_clicked()
         item->setFont(font);
         ui->tableWidget->setHorizontalHeaderItem(i,item);
     }
-    QString d="D:\\qtproject\\untitled1\\infotxt\\未审核内容\\未审核科研成果.txt";
+    QString d="fruit_1";
     open_sql(d);
 }
 
@@ -223,7 +205,7 @@ void To_examine::on_pushButton_8_clicked()
     QTableWidgetItem *item;
     //设置表头
     QStringList str;
-    str<<"类别"<<"姓名"<<"学号"<<"电话"<<"参加训练名称"<<"时间"<<"备注"<<"是否通过";
+    str<<"编号"<<"姓名"<<"成果类型"<<"时间"<<"备注"<<"学号"<<"通过"<<"不通过";
     //设置tablewidget列数
     ui->tableWidget->setColumnCount(str.count());
     //将列名称输入 table
@@ -236,7 +218,7 @@ void To_examine::on_pushButton_8_clicked()
         item->setFont(font);
         ui->tableWidget->setHorizontalHeaderItem(i,item);
     }
-    QString d="D:\\qtproject\\untitled1\\infotxt\\未审核内容\\未审核科研训练.txt";
+    QString d="fruit_3";
     open_sql(d);
 }
 
@@ -248,7 +230,7 @@ void To_examine::on_pushButton_12_clicked()
     QTableWidgetItem *item;
     //设置表头
     QStringList str;
-    str<<"类别"<<"姓名"<<"学号"<<"电话"<<"证书名称"<<"获得时间"<<"编号(有则填)"<<"是否通过";
+    str<<"编号"<<"姓名"<<"证书名称"<<"获得时间"<<"编号(有则填)"<<"学号"<<"通过"<<"不通过";
     //设置tablewidget列数
     ui->tableWidget->setColumnCount(str.count());
     //将列名称输入 table
@@ -261,7 +243,7 @@ void To_examine::on_pushButton_12_clicked()
         item->setFont(font);
         ui->tableWidget->setHorizontalHeaderItem(i,item);
     }
-    QString d="D:\\qtproject\\untitled1\\infotxt\\未审核内容\\未审核技能证书.txt";
+    QString d="fruit_5";
     open_sql(d);
 }
 
@@ -273,7 +255,7 @@ void To_examine::on_pushButton_7_clicked()
     QTableWidgetItem *item;
     //设置表头
     QStringList str;
-    str<<"类别"<<"姓名"<<"学号"<<"电话"<<"成果名称"<<"备注（可写编号）"<<"是否通过";
+    str<<"编号"<<"姓名"<<"类型"<<"成果名称"<<"账号"<<"通过"<<"不通过";
     //设置tablewidget列数
     ui->tableWidget->setColumnCount(str.count());
     //将列名称输入 table
@@ -286,7 +268,7 @@ void To_examine::on_pushButton_7_clicked()
         item->setFont(font);
         ui->tableWidget->setHorizontalHeaderItem(i,item);
     }
-    QString d="D:\\qtproject\\untitled1\\infotxt\\未审核内容\\未审核知识产权.txt";
+    QString d="fruit_2";
     open_sql(d);
 }
 
@@ -298,7 +280,7 @@ void To_examine::on_pushButton_9_clicked()
     QTableWidgetItem *item;
     //设置表头
     QStringList str;
-    str<<"类别"<<"姓名"<<"学号"<<"电话"<<"竞赛名称"<<"级别"<<"获奖名次"<<"时间"<<"学分值"<<"是否通过";
+    str<<"编号"<<"姓名"<<"竞赛名称"<<"获奖名次"<<"获奖时间"<<"学号"<<"通过"<<"不通过";
     //设置tablewidget列数
     ui->tableWidget->setColumnCount(str.count());
     //将列名称输入 table
@@ -311,7 +293,7 @@ void To_examine::on_pushButton_9_clicked()
         item->setFont(font);
         ui->tableWidget->setHorizontalHeaderItem(i,item);
     }
-    QString d="D:\\qtproject\\untitled1\\infotxt\\未审核内容\\未审核学科与科技竞赛.txt";
+    QString d="fruit_4";
     open_sql(d);
 }
 
@@ -323,7 +305,7 @@ void To_examine::on_pushButton_13_clicked()
     QTableWidgetItem *item;
     //设置表头
     QStringList str;
-    str<<"类别"<<"姓名"<<"学号"<<"电话"<<"参加创业实践或创新创业教育名称"<<"参加时间"<<"是否有证书"<<"是否通过";
+    str<<"编号"<<"姓名"<<"实践名称"<<"成果时间"<<"账号"<<"通过"<<"不通过";
     //设置tablewidget列数
     ui->tableWidget->setColumnCount(str.count());
     //将列名称输入 table
@@ -336,12 +318,32 @@ void To_examine::on_pushButton_13_clicked()
         item->setFont(font);
         ui->tableWidget->setHorizontalHeaderItem(i,item);
     }
-    QString d="D:\\qtproject\\untitled1\\infotxt\\未审核内容\\未审核创业实践和创新创业教育.txt";
+    QString d="fruit_6";
     open_sql(d);
 }
 
 //关界面
 void To_examine::on_pushButton_2_clicked()
 {
+    if(sub!=NULL)
+    {
+        delete sub;
+        sub=NULL;
+    }
     this->close();
 }
+
+//最后通过清除
+void To_examine::on_pushButton_14_clicked()
+{
+    if(sub!=NULL)
+    {
+        delete sub;
+        sub=NULL;
+    }
+    ui->tableWidget->clear();
+    ui->tableWidget->setColumnCount(0);
+    ui->tableWidget->setRowCount(0);
+    ui->label_3->setText("");
+}
+

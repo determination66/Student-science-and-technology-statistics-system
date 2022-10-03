@@ -3,6 +3,7 @@
 
 #include <QDialog>
 #include <QString>
+#include<QTableWidget>
 
 namespace Ui {
 class To_examine;
@@ -24,8 +25,6 @@ private slots:
 
     void on_pushButton_11_clicked();
 
-    void sort(int);//排序
-
     void on_pushButton_14_clicked();//审核
 
     void on_pushButton_8_clicked();//六个类别
@@ -42,6 +41,7 @@ private slots:
 
 private:
     Ui::To_examine *ui;
+    QTableWidget *sub;
 };
 
 #endif // TO_EXAMINE_H

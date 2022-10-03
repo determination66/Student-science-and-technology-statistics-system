@@ -26,7 +26,6 @@
     <font>
      <family>Arial</family>
      <pointsize>24</pointsize>
-     <weight>75</weight>
      <bold>true</bold>
     </font>
    </property>
@@ -58,7 +57,6 @@
          <font>
           <family>Arial</family>
           <pointsize>10</pointsize>
-          <weight>75</weight>
           <bold>true</bold>
          </font>
         </property>
@@ -82,7 +80,6 @@
          <font>
           <family>Arial</family>
           <pointsize>10</pointsize>
-          <weight>75</weight>
           <bold>true</bold>
          </font>
         </property>
@@ -110,7 +107,6 @@
          <font>
           <family>Arial</family>
           <pointsize>10</pointsize>
-          <weight>75</weight>
           <bold>true</bold>
          </font>
         </property>
@@ -134,7 +130,6 @@
          <font>
           <family>Arial</family>
           <pointsize>10</pointsize>
-          <weight>75</weight>
           <bold>true</bold>
          </font>
         </property>
@@ -162,7 +157,6 @@
          <font>
           <family>Arial</family>
           <pointsize>10</pointsize>
-          <weight>75</weight>
           <bold>true</bold>
          </font>
         </property>
@@ -186,7 +180,6 @@
          <font>
           <family>Arial</family>
           <pointsize>10</pointsize>
-          <weight>75</weight>
           <bold>true</bold>
          </font>
         </property>
@@ -211,6 +204,15 @@
      <height>541</height>
     </rect>
    </property>
+   <attribute name="horizontalHeaderVisible">
+    <bool>true</bool>
+   </attribute>
+   <attribute name="horizontalHeaderCascadingSectionResizes">
+    <bool>true</bool>
+   </attribute>
+   <attribute name="horizontalHeaderHighlightSections">
+    <bool>true</bool>
+   </attribute>
   </widget>
   <widget class="QWidget" name="horizontalLayoutWidget_2">
    <property name="geometry">
@@ -294,7 +296,7 @@
     </font>
    </property>
    <property name="text">
-    <string>确定后，√的将审核通过，剩下的未不通过，请谨慎点击确定</string>
+    <string>请跟根据提示进行审核通过与否！</string>
    </property>
   </widget>
   <widget class="QLabel" name="label_3">

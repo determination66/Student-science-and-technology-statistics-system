@@ -3,6 +3,7 @@
 #include "QPropertyAnimation"
 #include"check.h"
 #include"connectsql.h"
+#include"addstu.h"
 
 //登录的cpp文件
 login::login(QWidget *parent) :
@@ -44,8 +45,7 @@ login::login(QWidget *parent) :
     //去掉最大化、最小化按钮，保留关闭按钮
     this->setWindowFlags(Qt::WindowCloseButtonHint);
     //连接信号和槽函数的重点
-    connect(this,SIGNAL(sendData(QString)),&mw,SLOT(GetData(QString)));
-
+    connect(this,SIGNAL(sendData(QString)),&lm,SLOT(GetData(QString)));
 }
 
 void login::SignIn()
@@ -77,8 +77,7 @@ void login::SignIn()
         {
             query.exec(sql);
             this->hide();
-            mw.show();
-
+            lm.show();
         }
 }
 
@@ -127,5 +126,11 @@ void login::on_bt_admin_clicked()
 {
     Check p;
     p.exec();
+}
+
+//注册
+void login::on_bt_addstu_clicked()
+{
+    a.show();
 }
 

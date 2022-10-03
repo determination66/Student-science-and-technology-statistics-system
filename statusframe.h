@@ -2,6 +2,7 @@
 #define STATUSFRAME_H
 
 #include <QDialog>
+#include"managestu.h"
 
 namespace Ui {
 class Statusframe;
@@ -16,12 +17,14 @@ public:
     ~Statusframe();
 
 private slots:
-    void on_pushButton_clicked();//保存到数据库中
+
+    void on_pushButton_6_clicked();
 
     void on_pushButton_8_clicked();//查看目前通过成果
 
     void on_pushButton_7_clicked();//审核目前提交成果
 
+    void on_pushButton_9_clicked();
 
 private:
     Ui::Statusframe *ui;

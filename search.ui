@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1077</width>
-    <height>640</height>
+    <height>653</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -71,6 +71,9 @@
           <pointsize>10</pointsize>
          </font>
         </property>
+        <property name="styleSheet">
+         <string notr="true"/>
+        </property>
         <property name="text">
          <string>查找</string>
         </property>
@@ -118,6 +121,9 @@
      </spacer>
     </item>
     <item>
+     <layout class="QHBoxLayout" name="horizontalLayout_2"/>
+    </item>
+    <item>
      <widget class="QLabel" name="label_2">
       <property name="text">
        <string>绿色表示已通过审批，红色表示还未通过</string>
@@ -135,6 +141,19 @@
      </widget>
     </item>
    </layout>
+  </widget>
+  <widget class="QLabel" name="label_3">
+   <property name="geometry">
+    <rect>
+     <x>50</x>
+     <y>620</y>
+     <width>981</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
   </widget>
  </widget>
  <resources/>

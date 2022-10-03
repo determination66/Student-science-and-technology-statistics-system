@@ -8,7 +8,6 @@
 #include <QListWidget>
 #include <QString>
 #include <QListWidgetItem>
-#include <QFile>
 #include<QMessageBox>
 #include "QPropertyAnimation"
 #include"connectsql.h"
@@ -54,16 +53,27 @@ void Search::sear(QString name)
     QSqlQuery query=QSqlQuery(csql.GetDatabase());
     QString d[6]={"fruit_1","fruit_2","fruit_3","fruit_4","fruit_5","fruit_6"};
     QString tit[6]={
-        "科研成果\t\t姓名\t类型\t成果名称\t账号",
-        "知识产权\t\t姓名\t类型\t成果名称\t账号",
-        "科研训练\t\t姓名\t成果名称\t时间\t备注\t账号",
-        "学科与科技竞赛\t\t姓名\t竞赛名称\t获奖名次\t获奖时间\t账号",
-        "技能证书\t姓名\t证书名称\t成果时间\t成果编号\t账号",
-        "创业实践和创新教育\t\t姓名\t实践名称\t成果时间\t账号"
+        "科研成果,姓名,类型,成果名称,账号",
+        "知识产权,姓名,类型,成果名称,账号",
+        "科研训练,姓名,成果名称,时间,备注,账号",
+        "学科与科技竞赛,姓名,竞赛名称,获奖名次,获奖时间,账号",
+        "技能证书,姓名,证书名称,成果时间,成果编号,账号",
+        "创业实践和创新教育,姓名,实践名称,成果时间,账号"
     };
     int sum=0;
     for(int i=0;i<6;i++)
     {
+        QString sql=QString("select count(*) from information_schema.COLUMNS where TABLE_SCHEMA='demo' and table_name='%1'").arg(d[i]);
+        query.exec(sql);
+        query.first();
+        int col=query.value(0).toInt();
+        //qDebug()<<"col="<<col;
+        sql=QString("select count(*) from `%1` where `name` like'%2'").arg(d[i]).arg(name);
+        query.exec(sql);
+        query.first();
+        int num=query.value(0).toInt();
+        if(num>0)
+        {
         item=new QListWidgetItem;
         QFont font;
         font.setBold(true);//设置为粗体
@@ -74,31 +84,27 @@ void Search::sear(QString name)
         //将对应类别和信息显示到list
         item->setSizeHint(QSize(100, 100));
         ui->listWidget->addItem(item);//添加一个list中的对象
-        QString sql=QString("select count(*) from information_schema.COLUMNS where TABLE_SCHEMA='demo' and table_name='%1'").arg(d[i]);
-        qDebug()<<query.exec(sql);
-        query.first();
-        int col=query.value(0).toInt();
-        //qDebug()<<"col="<<col;
+        }
         sql=QString("select * from `%1` where `name` like'%2'").arg(d[i]).arg(name);
         query.exec(sql);
         int k=0;
         while(query.next())
         {
-            k++;
-            QString line="";
+           k++;
+           QString line="";
            for(int j=0;j<col-1;j++)
            {
-                line=line+"\t"+query.value(j).toString()+"\t";
+               if(num!=0)
+                line=line+"  "+query.value(j).toString()+"  ";
            }
            //qDebug()<<line;
            item=new QListWidgetItem;
            QFont font;
-           //font.setBold(true);//设置为粗体
            font.setPointSize(11);//字体大小
            item->setFont(font);
            item->setText(line);
            //将对应类别和信息显示到list
-           if(query.value("issubmit").toString()=="n")
+           if(query.value("issubmit").toString()=="un"||query.value("issubmit").toString()=="n")
            item->setBackground(QColor("pink"));//未通过显示红色背景
            else item->setBackground(QColor("lightgreen"));//通过显示绿色背景
            item->setSizeHint(QSize(100, 100));
@@ -106,7 +112,7 @@ void Search::sear(QString name)
         }
         sum+=k;
     }
-    qDebug()<<"总计的个数为："<<sum;
+    //qDebug()<<"总计的个数为："<<sum;
 }
 
 void Search::on_pushButton_clicked()

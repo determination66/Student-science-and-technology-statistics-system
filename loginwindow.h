@@ -1,20 +1,20 @@
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#ifndef loginwindow_H
+#define loginwindow_H
 
 #include <QMainWindow>
 #include <QMediaPlayer>
 
 namespace Ui {
-class MainWindow;
+class loginwindow;
 }
 
-class MainWindow : public QMainWindow
+class loginwindow : public QMainWindow
 {
     Q_OBJECT
 
 public:
-    explicit MainWindow(QWidget *parent = 0);
-    ~MainWindow();
+    explicit loginwindow(QWidget *parent = 0);
+    ~loginwindow();
 
 private slots:
     void on_pushButton_clicked();//个人成果录入
@@ -27,11 +27,17 @@ private slots:
 
     void on_toolButton_clicked();//背景音乐播放
 
+    void GetData(QString);
+public:
+    Ui::loginwindow* GetUi()
+   {
+        return ui;
+    }
 
 private:
-    Ui::MainWindow *ui;
+    Ui::loginwindow *ui;
     QMediaPlaylist* playlist;
     QMediaPlayer* player;
 };
 
-#endif // MAINWINDOW_H
+#endif // loginwindow_H

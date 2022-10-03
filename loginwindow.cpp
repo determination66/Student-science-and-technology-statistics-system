@@ -3,8 +3,8 @@
  * 各功能开始界面，转接打开到对应功能界面
  */
 
-#include "mainwindow.h"
-#include "ui_mainwindow.h"
+#include "loginwindow.h"
+#include "ui_loginwindow.h"
 #include "dialog.h"
 #include "search.h"
 #include "love.h"
@@ -13,9 +13,9 @@
 #include <QMediaPlayer>
 
 
-MainWindow::MainWindow(QWidget *parent) :
+loginwindow::loginwindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow)
+    ui(new Ui::loginwindow)
 {
     ui->setupUi(this);
     //设置界面标题
@@ -54,12 +54,12 @@ MainWindow::MainWindow(QWidget *parent) :
     player=new QMediaPlayer;
     player->setPlaylist(playlist);
     player->play();
-
+    //先关闭背景音乐
     on_toolButton_clicked();
 
 }
 
-MainWindow::~MainWindow()
+loginwindow::~loginwindow()
 {
     delete ui;
 }
@@ -67,14 +67,14 @@ MainWindow::~MainWindow()
 
 
 //学生个人成果录入
-void MainWindow::on_pushButton_clicked()
+void loginwindow::on_pushButton_clicked()
 {
     Dialog p;
     p.exec();
 }
 
 //学生个人成果查询界面
-void MainWindow::on_pushButton_2_clicked()
+void loginwindow::on_pushButton_2_clicked()
 {
     Search p;
     p.exec();
@@ -82,22 +82,27 @@ void MainWindow::on_pushButton_2_clicked()
 
 
 //用户界面
-void MainWindow::on_pushButton_4_clicked()
+void loginwindow::on_pushButton_4_clicked()
 {
     Love p;
     p.exec();
 }
 
 //关闭系统
-void MainWindow::on_pushButton_5_clicked()
+void loginwindow::on_pushButton_5_clicked()
 {
     this->close();
 }
 
 
+void loginwindow::GetData(QString str)
+{
+    qDebug()<<"loginwindow接收账号"<<str;
+}
+
 
 //暂停播放音乐
-void MainWindow::on_toolButton_clicked()
+void loginwindow::on_toolButton_clicked()
 {
     if(ui->toolButton->text()=="🎵播放")
     {

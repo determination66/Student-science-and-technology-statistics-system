@@ -171,7 +171,7 @@ void Look::on_pushButton_3_clicked()
         item->setFont(font);
         ui->tableWidget->setHorizontalHeaderItem(i,item);
     }
-    search_sql("fruit_2");
+    search_sql("fruit_3");
 
 }
 
@@ -199,7 +199,7 @@ void Look::on_pushButton_5_clicked()
         item->setFont(font);
         ui->tableWidget->setHorizontalHeaderItem(i,item);
     }
-       search_sql("fruit_3");
+       search_sql("fruit_5");
 
 }
 
@@ -227,7 +227,7 @@ void Look::on_pushButton_2_clicked()
         item->setFont(font);
         ui->tableWidget->setHorizontalHeaderItem(i,item);
     }
-    search_sql("fruit_4");
+    search_sql("fruit_2");
 }
 
 //学科与科技竞赛
@@ -254,7 +254,7 @@ void Look::on_pushButton_4_clicked()
         item->setFont(font);
         ui->tableWidget->setHorizontalHeaderItem(i,item);
     }
-       search_sql("fruit_5");
+       search_sql("fruit_4");
 }
 
 //创业实践和创新创业教育
